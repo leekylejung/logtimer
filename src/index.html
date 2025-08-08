@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Logarithmic Time</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Logtimer by Quillua</h1>
+
+    <div class="page-row">
+      <div class="clock-group">
+        <div class="clock-wrapper" id="clockWrap">
+          <canvas id="clock"></canvas>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <div class="time-display side-time">
+          <div class="time-unit">
+            <div class="time-value" id="hours">00</div>
+            <div class="time-label">Hours</div>
+          </div>
+          <div class="divider">:</div>
+          <div class="time-unit">
+            <div class="time-value" id="minutes">00</div>
+            <div class="time-label">Minutes</div>
+          </div>
+          <div class="divider">:</div>
+          <div class="time-unit">
+            <div class="time-value" id="seconds">00</div>
+            <div class="time-label">Seconds</div>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="calendar-card">
+            <div class="cal-day" id="dayName">—</div>
+            <div class="cal-date">
+              <span id="monthName">—</span>
+              <span id="dateNum">—</span>
+              <span class="cal-year" id="yearNum">—</span>
+            </div>
+          </div>
+
+          <div class="moon-card">
+            <canvas id="moon"></canvas>
+            <div class="moon-meta">
+              <div class="moon-title">Moonphase</div>
+              <div class="moon-sub" id="moonSub">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stopwatch">
+          <div class="stopwatch-title">Stopwatch</div>
+
+          <div class="sw-layout">
+            <div class="sw-main">
+              <div class="sw-analog">
+                <canvas id="swDial"></canvas>
+              </div>
+              <div class="sw-time" id="swTime">00:00.00</div>
+              <div class="sw-controls">
+                <button id="swStart">Start</button>
+                <button id="swLap" disabled>Lap</button>
+                <button id="swReset" disabled>Reset</button>
+              </div>
+            </div>
+
+            <div class="sw-lapcol">
+              <div class="sw-laphead">Laps</div>
+              <ul class="sw-laps" id="swLaps"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
