@@ -359,7 +359,6 @@ document.getElementById('swStart').addEventListener('click', startStopwatch);
 document.getElementById('swReset').addEventListener('click', resetStopwatch);
 document.getElementById('swLap').addEventListener('click', lapStopwatch);
 
-/* ===== Loop ===== */
 function tick(){
   const {w:W,h:H}=clockSize;
   const frame=drawClockFrame(clockCtx,W,H);
@@ -394,3 +393,92 @@ function boot(){
   requestAnimationFrame(tick);
 }
 boot();
+
+
+function drawStopwatchFrame(ctx, W, H){
+  const cx = W/2, cy = H/2;
+  const radius = Math.min(W,H)/2 - 18;
+
+  ctx.clearRect(0,0,W,H);
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius + 10, 0, Math.PI*2);
+  ctx.strokeStyle = colorVar('--ring-1');
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+  grad.addColorStop(0, '#131a34');
+  grad.addColorStop(0.7, '#0e1328');
+  grad.addColorStop(1, '#0a0e1f');
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI*2);
+  ctx.fillStyle = grad; ctx.fill();
+  ctx.strokeStyle = colorVar('--ring-2'); ctx.lineWidth = 1; ctx.stroke();
+
+  const secMarks = [0,1,2,5,10,15,20,30,40,50,60];
+  secMarks.forEach(val=>{
+    const frac = val===0 ? 0 : Math.log2(val+1)/Math.log2(61);
+    const ang  = frac * Math.PI*2 - Math.PI/2;
+    const isMain = val % 10 === 0;
+
+    const inner = radius - (isMain ? 6 : 10);
+    const outer = radius - 2;
+
+    ctx.beginPath();
+    ctx.moveTo(cx + inner*Math.cos(ang), cy + inner*Math.sin(ang));
+    ctx.lineTo(cx + outer*Math.cos(ang), cy + outer*Math.sin(ang));
+    ctx.strokeStyle = isMain ? colorVar('--ring-2') : colorVar('--ring-1');
+    ctx.lineWidth = isMain ? 1.6 : 1;
+    ctx.stroke();
+
+    if (isMain && val > 0){
+      const rNum = radius - 16;
+      ctx.font = '10px Inter, sans-serif';
+      ctx.fillStyle = colorVar('--ring-2');
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(val, cx + rNum*Math.cos(ang), cy + rNum*Math.sin(ang));
+    }
+  });
+
+  for(let i=0;i<=60;i+=5){
+    if(!secMarks.includes(i)){
+      const frac = Math.log2(i+1)/Math.log2(61);
+      const ang  = frac * Math.PI*2 - Math.PI/2;
+      const rDot = radius - 3;
+      ctx.beginPath();
+      ctx.arc(cx + rDot*Math.cos(ang), cy + rDot*Math.sin(ang), 1, 0, Math.PI*2);
+      ctx.fillStyle = colorVar('--ring-1'); ctx.fill();
+    }
+  }
+
+  return { cx, cy, radius };
+}
+
+function drawStopwatchAnalog(){
+  if(!swDialSized) return;
+  const rect = swDialCanvas.getBoundingClientRect();
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  if(swDialCanvas.width!==Math.round(rect.width*dpr)||swDialCanvas.height!==Math.round(rect.height*dpr)){
+    setupHiDPI(swDialCanvas, swDialCtx);
+  }
+  const W=rect.width,H=rect.height;
+  const {cx,cy,radius} = drawStopwatchFrame(swDialCtx, W, H);
+
+  const nowPerf = performance.now();
+  const elapsed = swRunning ? swElapsed + (nowPerf - swStartTs) : swElapsed;
+
+  const totalCs = Math.floor(elapsed/10);
+  const cs = totalCs % 100;
+  const s  = Math.floor(totalCs/100) % 60;
+
+  const sFloat = s + cs/100;
+
+  const secondValue = Math.log2(sFloat + 1) / Math.log2(61);
+  const centiValue  = Math.log2(cs + 1) / Math.log2(101);
+
+  drawHand(swDialCtx, cx, cy, secondValue, radius * 0.86, 2.0, colorVar('--accent'));
+  drawHand(swDialCtx, cx, cy, centiValue,  radius * 0.55, 1.1, colorVar('--muted'));
+  drawCenter(swDialCtx, cx, cy);
+}
