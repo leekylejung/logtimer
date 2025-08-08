@@ -1,4 +1,4 @@
-# Logtimer — a logarithmic analog/digital clock + moonphase + stopwatch
+# Logtimer — a logarithmic analog clock
 
 A clean, canvas-driven clock that renders **logarithmic** hour/minute/second scales
 
