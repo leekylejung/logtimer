@@ -20,7 +20,6 @@ Then convert to an angle with `θ = fraction * 2π - π/2` and draw each hand fr
 #### Dial & markers
 - **Hour markers** use the same logarithmic scale for positions 0–12.
 - **Second scale** has ticks at log-spaced positions; numerals every 10.
-- Hand colors: **hours/minutes** off‑white (`--hand`), **seconds** red (`--accent`).
 
 #### Moonphase
 - A quick, accurate approximation using the synodic month.
